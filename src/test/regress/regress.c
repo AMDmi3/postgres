@@ -18,6 +18,7 @@
 
 #include <math.h>
 #include <signal.h>
+#include <threads.h>
 
 #include "access/detoast.h"
 #include "access/htup_details.h"
@@ -1063,4 +1064,15 @@ Datum
 test_opclass_options_func(PG_FUNCTION_ARGS)
 {
 	PG_RETURN_NULL();
+}
+
+static thread_local int32 thread_local_value = 0;
+
+PG_FUNCTION_INFO_V1(test_thread_local_storage_access);
+Datum
+test_thread_local_storage_access(PG_FUNCTION_ARGS)
+{
+	thread_local_value++;
+
+	PG_RETURN_INT32(thread_local_value);
 }
